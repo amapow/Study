@@ -31,6 +31,12 @@ class Run{
         return returnName;
     }
 }
+
+class MakeDir{
+    public void inputPath(String path){
+
+    }
+}
 public class SampleUsage
 {
     public static void main(String[] args) throws ImageProcessingException, IOException {
