@@ -16,7 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 class Run{
-    public String print(String path) throws ImageProcessingException, IOException{
+    String path;
+    public String print(String path) throws ImageProcessingException, IOException {
+        this.path = path;
         File file = new File(path);
         System.out.println(file.getName());
         Metadata metadata = JpegMetadataReader.readMetadata(file);
@@ -24,10 +26,15 @@ class Run{
         if (directory == null) {
             return "metadata is null";
         }
-        String modelName = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-        String returnName = modelName;
-
-        return returnName;
+        String date = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+        String returnDate = date;
+        //Date 포맷을 yyyy:MM:dd로 짜름
+        return returnDate;
+    }
+    public String formatDate() throws ImageProcessingException, IOException {
+        String date = print(this.path);
+        String formatDate = print(this.path).substring(0,10);
+        return formatDate;
     }
 }
 
@@ -53,6 +60,7 @@ public class SampleUsage
                 File file2 = new File(inputpath + flist[i]);
                 path = file2.toString();
                 System.out.println(run.print(path));
+                System.out.println(run.formatDate());
                 /*Metadata metadata = ImageMetadataReader.readMetadata(file2);
                 ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
                 String modelName = directory.getString(ExifSubIFDDirectory.TAG_LENS_MODEL);
