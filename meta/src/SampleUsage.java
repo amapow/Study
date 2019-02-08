@@ -76,7 +76,7 @@ class MakeDir{
 public class SampleUsage
 {
     public static void main(String[] args) throws ImageProcessingException, IOException {
-        String inputpath = args[0];
+        String inputpath = "/Users/janghyeon/Pictures/test/";
         File file = new File(inputpath);
         String[] flist = file.list();
         Date date;
