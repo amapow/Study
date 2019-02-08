@@ -1,25 +1,20 @@
-import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
 import com.drew.imaging.jpeg.JpegMetadataReader;
-import com.drew.imaging.jpeg.JpegProcessingException;
-import com.drew.imaging.jpeg.JpegSegmentMetadataReader;
-import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
-import com.drew.metadata.Tag;
-import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
-import com.drew.metadata.iptc.IptcReader;
 
+import  java.io.FileInputStream;
+import  java.io.FileOutputStream;
+import  java.nio.channels.FileChannel;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
+
+
 class Run {
     String path;
     public String print(String path) throws ImageProcessingException, IOException {
         this.path = path;
-        System.out.println(path + "\nRun 돌아감\n");
         File file = new File(path);
         Metadata metadata = JpegMetadataReader.readMetadata(file);
         ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
@@ -61,10 +56,23 @@ class Run {
         File copyFile = new File(outputPath_d + "/" + fileName);
 
         //copyfile 리턴하고 copyfile 메소드 추가
-        if (file.exists()){
-            file.renameTo(copyFile);
+        if (copyFile.exists() == false){
+            long fsize = 0;
+            FileInputStream fis = new FileInputStream(path);
+            FileOutputStream fos = new FileOutputStream(copyFile);
+            FileChannel fcin = fis.getChannel();
+            FileChannel fcout = fos.getChannel();
+
+            fsize = fcin.size();
+            fcin.transferTo(0, fsize, fcout);
+
+            fcout.close();
+            fcin.close();
+            fos.close();
+            fis.close();
         }
-        System.out.println(copyFile);
+        else System.out.println("파일이 이미 존재합니다.");
+
     }
 }
 
@@ -89,33 +97,8 @@ public class SampleUsage
                 Run run = new Run();
                 File file2 = new File(inputpath + flist[i]);
                 path = file2.toString();
-                run.makeDirectory(path, "/Users/janghyeon/Pictures/test/", flist[i]);
-                /*Metadata metadata = ImageMetadataReader.readMetadata(file2);
-                ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-                String modelName = directory.getString(ExifSubIFDDirectory.TAG_LENS_MODEL);
-                System.out.println(modelName);*/
-                //date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-                //SimpleDateFormat simdate = new SimpleDateFormat("yyyy-MM-dd");
-                //d = date.toString();
-                //System.out.println(d);
+                run.makeDirectory(path, "/Volumes/DATA/PHOTO/", flist[i]);
             }
         }
-        //Metadata metadata = ImageMetadataReader.readMetadata(file);
-        //ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-        //Date date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-           /* for(int j = 0 ; j < flist2.length ; j++){
-                if(flist2[j].substring(flist2[j].length() -3, flist2[j].length()).equals("jpg")){
-                    File file2 = new File(inputpath + flist2[j]);
-                    System.out.println(file2);
-                    jpglist[k] = flist2[j];
-                    k++;
-                }
-                //System.out.println(flist2[j].substring(flist2[j].length() - 3, flist2[j].length()));
-            }*/
-            //System.out.println(flist[i]);
-        //File file2 = new File()
-        /*for(int i = 0; i < jpglist.length; i++){
-            Metadata metadata = ImageMetadataReader.readMetadata(file);
-        }*/
     }
 }
