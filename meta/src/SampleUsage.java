@@ -17,14 +17,15 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 class Run{
-    Metadata metadata = new Metadata();
-    ExifSubIFDDirectory directory = new ExifSubIFDDirectory();
-    String modelName;
     public String print(String path) throws ImageProcessingException, IOException{
         File file = new File(path);
-        metadata = ImageMetadataReader.readMetadata(file);
+        System.out.println(file.getName());
+        Metadata metadata = JpegMetadataReader.readMetadata(file);
         ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
-        String modelName = directory.getString(ExifSubIFDDirectory.TAG_LENS_MODEL);
+        if (directory == null) {
+            return "metadata is null";
+        }
+        String modelName = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
         String returnName = modelName;
 
         return returnName;
