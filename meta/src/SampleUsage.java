@@ -15,12 +15,12 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-class Run{
+class Run {
     String path;
     public String print(String path) throws ImageProcessingException, IOException {
         this.path = path;
+        System.out.println(path + "\nRun 돌아감\n");
         File file = new File(path);
-        System.out.println(file.getName());
         Metadata metadata = JpegMetadataReader.readMetadata(file);
         ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
         if (directory == null) {
@@ -33,8 +33,38 @@ class Run{
     }
     public String formatDate() throws ImageProcessingException, IOException {
         String date = print(this.path);
-        String formatDate = print(this.path).substring(0,10);
+        String formatDate = date.substring(0,10);
         return formatDate;
+    }
+    public void makeDirectory(String path, String outputPath, String fileName) throws ImageProcessingException, IOException {
+        this.path = path;
+        File file = new File(path);
+        String temp = formatDate();
+        String year = temp.substring(0,4);
+        String month = temp.substring(5,7);
+        String day = temp.substring(8,10);
+        String outputPath_y = outputPath+year;
+        File file_y = new File(outputPath_y);
+        String outputPath_m = outputPath_y+"/"+month;
+        File file_m = new File(outputPath_m);
+        String outputPath_d = outputPath_m+"/"+day;
+        File file_d = new File(outputPath_d);
+        if (file_y.exists() == false){
+            file_y.mkdir();
+        }
+        if (file_m.exists() == false){
+            file_m.mkdir();
+        }
+        if (file_d.exists() ==false){
+            file_d.mkdir();
+        }
+        File copyFile = new File(outputPath_d + "/" + fileName);
+
+        //copyfile 리턴하고 copyfile 메소드 추가
+        if (file.exists()){
+            file.renameTo(copyFile);
+        }
+        System.out.println(copyFile);
     }
 }
 
@@ -59,8 +89,7 @@ public class SampleUsage
                 Run run = new Run();
                 File file2 = new File(inputpath + flist[i]);
                 path = file2.toString();
-                System.out.println(run.print(path));
-                System.out.println(run.formatDate());
+                run.makeDirectory(path, "/Users/janghyeon/Pictures/test/", flist[i]);
                 /*Metadata metadata = ImageMetadataReader.readMetadata(file2);
                 ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
                 String modelName = directory.getString(ExifSubIFDDirectory.TAG_LENS_MODEL);
