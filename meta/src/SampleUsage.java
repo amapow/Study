@@ -9,7 +9,6 @@ import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifReader;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.iptc.IptcReader;
-import sun.util.calendar.BaseCalendar;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,7 +48,7 @@ public class SampleUsage
         String d = "";
 
         for(int i = 0; i < flist.length ; i++) {
-            if (flist[i].substring(flist[i].length() - 3, flist[i].length()).equals("jpg")) {
+            if (flist[i].substring(flist[i].length() - 3, flist[i].length()).equals("jpg") || flist[i].substring(flist[i].length() - 4, flist[i].length()).equals("jpeg")) {
                 Run run = new Run();
                 File file2 = new File(inputpath + flist[i]);
                 path = file2.toString();
