@@ -12,20 +12,21 @@ import java.nio.channels.FileChannel;
 
 class Run {
     String path;
-    public String print(String path) throws ImageProcessingException, IOException {
-        this.path = path;
+    public String print() throws ImageProcessingException, IOException {
+        //path로 받은 경로의 파일의 메타데이터를 읽어 사진 촬영 일시를 리턴하는 메소드
         File file = new File(path);
         Metadata metadata = JpegMetadataReader.readMetadata(file);
         ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
+        //메타데이터가 없는 파일의 예외처리
         if (directory == null) {
             return "null";
         }
         String date = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
-        String returnDate = date;
-        return returnDate;
+        return date;
     }
     public String formatDate() throws ImageProcessingException, IOException {
-        String date = print(this.path);
+        //메타데이터의 촬영 일시를 yyyy:MM:dd로 포맷하여 리턴하는 메소드
+        String date = print();
         if(date.length() < 10) {
             return "null";
         }
@@ -33,17 +34,21 @@ class Run {
         return formatDate;
     }
     public void makeDirectory(String path, String outputPath, String fileName) throws ImageProcessingException, IOException {
+        //촬영 일시를 읽어 outputPath/yyyy/MM/dd로 폴더를 생성하는 메소드
         this.path = path;
         File checkOutPath = new File(outputPath);
+        //checkOutPath가 없는 경우 폴더 생성
         if (checkOutPath.exists() == false) {
             checkOutPath.mkdir();
         }
-        String temp = formatDate();
+
+        String formatDate = formatDate();
         if (formatDate() == "null")
             return;
-        String year = temp.substring(0, 4);
-        String month = temp.substring(5, 7);
-        String day = temp.substring(8, 10);
+
+        String year = formatDate.substring(0, 4);
+        String month = formatDate.substring(5, 7);
+        String day = formatDate.substring(8, 10);
         String outputPath_y = outputPath + year;
         File file_y = new File(outputPath_y);
         String outputPath_m = outputPath_y + "/" + month;
@@ -59,6 +64,7 @@ class Run {
         if (file_d.exists() == false) {
             file_d.mkdir();
         }
+
         File copyFile = new File(outputPath_d + "/" + fileName);
         copyFile(copyFile);
     }
@@ -81,13 +87,15 @@ class Run {
         }
     }
 }
+class CheckFile {
+    public void checkFile(String inputPath, String outputPath) throws ImageProcessingException, IOException{
+        if (inputPath.endsWith("/") == false) {
+            inputPath = inputPath + "/";
+        }
+        if (outputPath.endsWith("/") == false) {
+            outputPath = outputPath + "/";
+        }
 
-public class metaDataCopy {
-    public static void main(String[] args) throws ImageProcessingException, IOException {
-        //inputPath로 사진을 읽어올 폴더를 지정 후 file 객체를 생성하여 flist 배열에 file 객체에 저장 된 폴더내 파일들의 list를 저장
-        //String inputpath = "/Users/janghyeon/Pictures/test/";
-        String inputPath = "c:/";
-        String outputPath = "d:/test/";
         File file = new File(inputPath);
         String[] flist = file.list();
         String path;
@@ -104,5 +112,15 @@ public class metaDataCopy {
                 }
             }
         }
+    }
+}
+public class MetaDataCopy {
+    public static void main(String[] args) throws ImageProcessingException, IOException {
+        //inputPath로 사진을 읽어올 폴더를 지정 후 file 객체를 생성하여 flist 배열에 file 객체에 저장 된 폴더내 파일들의 list를 저장
+        //String inputpath = "/Users/janghyeon/Pictures/test/";
+        String inputPath = "c:/";
+        String outputPath = "d:/test/Date";
+        CheckFile checkFile = new CheckFile();
+        checkFile.checkFile(inputPath, outputPath);
     }
 }
