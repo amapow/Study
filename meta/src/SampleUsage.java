@@ -19,7 +19,7 @@ class Run {
         Metadata metadata = JpegMetadataReader.readMetadata(file);
         ExifSubIFDDirectory directory = metadata.getFirstDirectoryOfType(ExifSubIFDDirectory.class);
         if (directory == null) {
-            return "metadata is null";
+            return "null";
         }
         String date = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
         String returnDate = date;
@@ -28,13 +28,22 @@ class Run {
     }
     public String formatDate() throws ImageProcessingException, IOException {
         String date = print(this.path);
+        if(date.length() < 10) {
+            return "null";
+        }
         String formatDate = date.substring(0,10);
         return formatDate;
     }
     public void makeDirectory(String path, String outputPath, String fileName) throws ImageProcessingException, IOException {
         this.path = path;
         File file = new File(path);
+        File checkOutPath = new File(outputPath);
+        if (checkOutPath.exists() == false){
+            checkOutPath.mkdir();
+        }
         String temp = formatDate();
+        if (formatDate() == "null")
+            return;
         String year = temp.substring(0,4);
         String month = temp.substring(5,7);
         String day = temp.substring(8,10);
@@ -81,10 +90,10 @@ class MakeDir{
 
     }
 }
-public class SampleUsage
-{
+public class SampleUsage {
     public static void main(String[] args) throws ImageProcessingException, IOException {
-        String inputpath = "/Users/janghyeon/Pictures/test/";
+        //String inputpath = "/Users/janghyeon/Pictures/test/";
+        String inputpath = "c:/";
         File file = new File(inputpath);
         String[] flist = file.list();
         Date date;
@@ -92,13 +101,17 @@ public class SampleUsage
         int k = 0;
         String d = "";
 
-        for(int i = 0; i < flist.length ; i++) {
-            if (flist[i].substring(flist[i].length() - 3, flist[i].length()).equals("jpg") || flist[i].substring(flist[i].length() - 4, flist[i].length()).equals("jpeg")) {
-                Run run = new Run();
-                File file2 = new File(inputpath + flist[i]);
-                path = file2.toString();
-                run.makeDirectory(path, "/Volumes/DATA/PHOTO/", flist[i]);
+        for (int i = 0; i < flist.length; i++) {
+            if (flist[i].length() > 4) {
+                if (flist[i].substring(flist[i].length() - 3, flist[i].length()).equals("jpg") || flist[i].substring(flist[i].length() - 4, flist[i].length()).equals("jpeg")) {
+                    Run run = new Run();
+                    File file2 = new File(inputpath + flist[i]);
+                    path = file2.toString();
+                    //run.makeDirectory(path, "/Volumes/DATA/PHOTO/", flist[i]);
+                    run.makeDirectory(path, "d:/test/", flist[i]);
+                }
             }
+            else System.out.println("Pass");
         }
     }
 }
