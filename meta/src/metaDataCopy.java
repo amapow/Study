@@ -3,12 +3,11 @@ import com.drew.imaging.jpeg.JpegMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 
-import  java.io.FileInputStream;
-import  java.io.FileOutputStream;
-import  java.nio.channels.FileChannel;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Date;
+import java.nio.channels.FileChannel;
 
 
 class Run {
@@ -23,7 +22,6 @@ class Run {
         }
         String date = directory.getString(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
         String returnDate = date;
-        //Date 포맷을 yyyy:MM:dd로 짜름
         return returnDate;
     }
     public String formatDate() throws ImageProcessingException, IOException {
@@ -36,34 +34,35 @@ class Run {
     }
     public void makeDirectory(String path, String outputPath, String fileName) throws ImageProcessingException, IOException {
         this.path = path;
-        File file = new File(path);
         File checkOutPath = new File(outputPath);
-        if (checkOutPath.exists() == false){
+        if (checkOutPath.exists() == false) {
             checkOutPath.mkdir();
         }
         String temp = formatDate();
         if (formatDate() == "null")
             return;
-        String year = temp.substring(0,4);
-        String month = temp.substring(5,7);
-        String day = temp.substring(8,10);
-        String outputPath_y = outputPath+year;
+        String year = temp.substring(0, 4);
+        String month = temp.substring(5, 7);
+        String day = temp.substring(8, 10);
+        String outputPath_y = outputPath + year;
         File file_y = new File(outputPath_y);
-        String outputPath_m = outputPath_y+"/"+month;
+        String outputPath_m = outputPath_y + "/" + month;
         File file_m = new File(outputPath_m);
-        String outputPath_d = outputPath_m+"/"+day;
+        String outputPath_d = outputPath_m + "/" + day;
         File file_d = new File(outputPath_d);
-        if (file_y.exists() == false){
+        if (file_y.exists() == false) {
             file_y.mkdir();
         }
-        if (file_m.exists() == false){
+        if (file_m.exists() == false) {
             file_m.mkdir();
         }
-        if (file_d.exists() ==false){
+        if (file_d.exists() == false) {
             file_d.mkdir();
         }
         File copyFile = new File(outputPath_d + "/" + fileName);
-
+        copyFile(copyFile);
+    }
+    public void copyFile(File copyFile) throws IOException {
         //copyfile 리턴하고 copyfile 메소드 추가
         if (copyFile.exists() == false){
             long fsize = 0;
@@ -80,38 +79,30 @@ class Run {
             fos.close();
             fis.close();
         }
-        else System.out.println("파일이 이미 존재합니다.");
-
     }
 }
 
-class MakeDir{
-    public void inputPath(String path){
-
-    }
-}
-public class SampleUsage {
+public class metaDataCopy {
     public static void main(String[] args) throws ImageProcessingException, IOException {
+        //inputPath로 사진을 읽어올 폴더를 지정 후 file 객체를 생성하여 flist 배열에 file 객체에 저장 된 폴더내 파일들의 list를 저장
         //String inputpath = "/Users/janghyeon/Pictures/test/";
-        String inputpath = "c:/";
-        File file = new File(inputpath);
+        String inputPath = "c:/";
+        String outputPath = "d:/test/";
+        File file = new File(inputPath);
         String[] flist = file.list();
-        Date date;
         String path;
-        int k = 0;
-        String d = "";
 
         for (int i = 0; i < flist.length; i++) {
             if (flist[i].length() > 4) {
-                if (flist[i].substring(flist[i].length() - 3, flist[i].length()).equals("jpg") || flist[i].substring(flist[i].length() - 4, flist[i].length()).equals("jpeg")) {
+                if (flist[i].substring(flist[i].length() - 3).equals("jpg") || flist[i].substring(flist[i].length() - 4).equals("jpeg")) {
                     Run run = new Run();
-                    File file2 = new File(inputpath + flist[i]);
+                    //inputPath에서 체크중인 jpg, jpeg 파일을 저장하는 file2 객체와 체크중인 jpg, jpeg 파일명을 String으로 저장하는 path
+                    File file2 = new File(inputPath + flist[i]);
                     path = file2.toString();
                     //run.makeDirectory(path, "/Volumes/DATA/PHOTO/", flist[i]);
-                    run.makeDirectory(path, "d:/test/", flist[i]);
+                    run.makeDirectory(path, outputPath, flist[i]);
                 }
             }
-            else System.out.println("Pass");
         }
     }
 }
