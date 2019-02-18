@@ -87,7 +87,7 @@ class Run {
     }
 }
 class CheckFile {
-    public void checkFile(String inputPath, String outputPath) throws ImageProcessingException, IOException{
+    public void checkFile(String inputPath, String outputPath) throws ImageProcessingException, IOException {
         if (inputPath.endsWith("/") == false) {
             inputPath = inputPath + "/";
         }
@@ -102,6 +102,22 @@ class CheckFile {
         for (int i = 0; i < flist.length; i++) {
             flist[i] = flist[i].toLowerCase();
             if (flist[i].length() > 4) {
+                if (flist[i].indexOf(".") == -1) {
+                    String tempPath = inputPath + flist[i];
+                    flist[i] = tempPath + "/";
+                    File file1 = new File(flist[i]);
+                    String[] flist_dir = file1.list();
+                    for (int j = 0 ; j < flist_dir.length ; j++){
+                        if (flist_dir[j].substring(flist_dir[j].length() - 3).equals("jpg") || flist_dir[j].substring(flist_dir[j].length() - 4).equals("jpeg")) {
+                            Run run = new Run();
+                            //inputPath에서 체크중인 jpg, jpeg 파일을 저장하는 file2 객체와 체크중인 jpg, jpeg 파일명을 String으로 저장하는 path
+                            File file2 = new File(file1 + "/" + flist_dir[j]);
+                            path = file2.toString();
+                            flist_dir[j] = flist_dir[j].toUpperCase();
+                            run.makeDirectory(path, outputPath, flist_dir[j]);
+                        }
+                    }
+                }
                 if (flist[i].substring(flist[i].length() - 3).equals("jpg") || flist[i].substring(flist[i].length() - 4).equals("jpeg")) {
                     Run run = new Run();
                     //inputPath에서 체크중인 jpg, jpeg 파일을 저장하는 file2 객체와 체크중인 jpg, jpeg 파일명을 String으로 저장하는 path
@@ -114,25 +130,16 @@ class CheckFile {
         }
     }
 }
-public class MetaDataCopy {
-    public static void main(String[] args) throws ImageProcessingException, IOException {
-        //inputPath로 사진을 읽어올 폴더를 지정 후 file 객체를 생성하여 flist 배열에 file 객체에 저장 된 폴더내 파일들의 list를 저장
-        //String inputpath = "/Users/janghyeon/Pictures/test/";
-        String inputPath = "/Volumes/RICOH_GR/DCIM/";
-        //String outputPath = "/Volumes/DATA/PHOTO/";
-        String outputPath = "/Users/janghyeon/Pictures/test";
-        File test = new File(inputPath);
-        String[] list = test.list();
-        for(int i = 0; i < list.length ; i++){
-            File temp = new File(inputPath + list[i]);
-            String[] tempList = temp.list();
-            for(int j = 0; j < tempList.length ; j++){
-                if (tempList[j].substring(tempList[j].length() - 3).equals("JPG") || tempList[j].substring(tempList[j].length() - 4).equals("JPEG")) {
-                    System.out.println(tempList[j]);
-                }
-            }
+    public class MetaDataCopy {
+        public static void main(String[] args) throws ImageProcessingException, IOException {
+            //inputPath로 사진을 읽어올 폴더를 지정 후 file 객체를 생성하여 flist 배열에 file 객체에 저장 된 폴더내 파일들의 list를 저장
+            String inputPath = "C:/Users/Administrator/Pictures/Test/Input/";
+            //String inputPath = "/Volumes/RICOH_GR/DCIM/";
+            //String outputPath = "/Volumes/DATA/PHOTO/";
+            //String outputPath = "/Users/janghyeon/Pictures/test";
+            String outputPath = "C:/Users/Administrator/Pictures/Test/Output";
+            File test = new File(inputPath);
+            CheckFile checkFile = new CheckFile();
+            checkFile.checkFile(inputPath, outputPath);
         }
-        CheckFile checkFile = new CheckFile();
-        //checkFile.checkFile(inputPath, outputPath);
     }
-}
