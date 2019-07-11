@@ -7,6 +7,5 @@ public class MainClass {
         ObjectClass obj2 = new ObjectClass(1,2);
         obj2.getInfo();
 
-
     }
 }
