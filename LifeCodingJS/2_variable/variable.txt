@@ -1,0 +1,3 @@
+JavaScript에서 변수는 var로 시작(생략가능)
+
+var a = 1;
