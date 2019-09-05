@@ -2,15 +2,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
  
-
 /*
 N 줄인 삼각형을 출력한다. 단, 사용자로 부터 임의의 N 을 입력 받는다. 아래는 N = 3 일 때의 출력 예시 이다.
-
   *
  ***
 *****
 위와 동일한 형태를 취하되, 역 삼각형을 출력한다. 아래는 N = 3 일 때의 출력 예시 이다.
-
 *****
  ***
   *
@@ -24,15 +21,13 @@ void Triangle() {
 	for (int i = 0; i < n; i++) {
 		for (int j = i; j < n - 1; j++) {
 			printf(" ");
-
 			}
 		for (int j = 0; j < 2 * i + 1; j++) {
 			printf("*");
-		}
-		
+		}		
 		printf("\n");
 	}
-
+	
 	for (int i = 0; i < n; i++) {
 		for (int k = temp; k < n; k++) {
 			printf(" ");
@@ -40,9 +35,7 @@ void Triangle() {
 		for (int j = temp * 2 - 1 ; j > 0 ; j--) {
 			printf("*");
 		}
-
-		temp--;
-		
+		temp--;		
 		printf("\n");
 	}
 }
