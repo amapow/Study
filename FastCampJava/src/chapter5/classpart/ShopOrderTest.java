@@ -1,5 +1,4 @@
-package classpart;
-import java.util.Date;
+package chapter5.classpart;
 
 public class ShopOrderTest {
     public static void main(String[] args) {

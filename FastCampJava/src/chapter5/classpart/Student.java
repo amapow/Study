@@ -1,4 +1,4 @@
-package oop.chapter1.classpart;
+package chapter5.classpart;
 
 public class Student {
 
