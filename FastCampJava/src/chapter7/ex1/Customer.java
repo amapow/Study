@@ -15,6 +15,7 @@ public class Customer {
 //        System.out.println("Custom() 생성자 호출");
 //    }
 
+    public Customer() {}
     public Customer(int customerID, String customerName) {
         this.customerName = customerName;
         this.customerID = customerID;

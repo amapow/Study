@@ -7,8 +7,11 @@ public class GoldCustomer extends Customer {
 
 
 
+    public GoldCustomer() {}
+
     public GoldCustomer(int customerID, String customerName) {
         super(customerID, customerName);
+        customerGrade = "Gold";
         salesRatio = 0.1;
         bonusRatio = 0.02;
     }
